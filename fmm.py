@@ -24,11 +24,11 @@ def direct_all (z,q):
     definition of phi on p. 281. Used as ground truth for verifying fmm().
     """
     N = len(z)  #how many particles
-    pot = np.zeros(N, dtype=complex)
-    for i in range(N):              # target particle  (the star)
-        for j in range(N):          # every source     (the red lines)
+    pot = np.zeros(N, dtype=complex)   #accumulating with += from zeros.
+    for i in range(N):              # target particle
+        for j in range(N):          # every source 
             if j != i:              # a particle does not act on itself
-                pot[i] += q[j]*np.log(z[i]-z[j])       # <-- Eq. (2.7): one red line's contribution
+                pot[i] += q[j]*np.log(z[i]-z[j])       # Eq. (2.7)  
     return pot
 
 
@@ -82,10 +82,10 @@ def interaction_list(level, box):
     m_parent = 2 ** (level - 1)               # boxes per side one level up
     result = []
 
-    for pc in range(parent[0] - 1, parent[0] + 2):        # parent's 3 columns
-        for pr in range(parent[1] - 1, parent[1] + 2):    # parent's 3 rows
-            if not (0 <= pc < m_parent and 0 <= pr < m_parent):
-                continue                                  # off the grid, skip
+    for pc in range(parent[0] - 1, parent[0] + 2):        # columns 0, 1, 2
+        for pr in range(parent[1] - 1, parent[1] + 2):    # rows 0, 1, 2
+            if not (0 <= pc < m_parent and 0 <= pr < m_parent):   #if this parent isn't on the grid, skip it.
+                continue                                 
             for cc in (2 * pc, 2 * pc + 1):               # that box's 2 child columns
                 for cr in (2 * pr, 2 * pr + 1):
                     if well_separated((cc, cr), box):   # keep only well-separated ones
@@ -171,9 +171,9 @@ def m2m(a, z0, p):
     b = np.zeros(p + 1, dtype=complex)
     b[0] = a[0]
     for l in range(1, p + 1):
-        s = -a[0] * z0**l / l
+        s = -a[0] * z0**l / l            # Piece 1
         for k in range(1, l + 1):
-            s += a[k] * z0**(l - k) * comb(l - 1, k - 1)
+            s += a[k] * z0**(l - k) * comb(l - 1, k - 1)   # Piece 2
         b[l] = s
     return b
 
